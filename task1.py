@@ -83,7 +83,9 @@ class GbBlogParse:
             self.compile_comments(child_comments, under_itm)
 
         new_dict = {"id": dict_comment["id"],
-                    "created_at": dict_comment["created_at"],
+                    "created_at": dt.datetime.fromtimestamp(int(time.mktime(time.strptime(dict_comment["created_at"],
+                                                                                          "%Y-%m-%dT%X%z")))
+                                                            + time.timezone),
                     "text": dict_comment["body"],
                     "author": {"id": dict_comment["user"]["id"],
                                "name": dict_comment["user"]["full_name"],
