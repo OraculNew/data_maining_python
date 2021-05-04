@@ -1,6 +1,4 @@
 import datetime as dt
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship
 
 from sqlalchemy import (
     Column,
@@ -8,14 +6,13 @@ from sqlalchemy import (
     String,
     ForeignKey,
     Boolean,
-    BigInteger,
-    Text,
     Table,
     DateTime,
 )
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship
 
-from .mixins import IdMixin, UrlMixin
-
+from .mixins import UrlMixin
 
 Base = declarative_base()
 
