@@ -2,7 +2,7 @@ import sqlalchemy.exc
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from . import models
+import models
 
 
 class Database:

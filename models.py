@@ -12,7 +12,7 @@ from sqlalchemy import (
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
-from .mixins import UrlMixin
+from mixins import UrlMixin
 
 Base = declarative_base()
 
