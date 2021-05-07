@@ -10,25 +10,26 @@ class AutoyoulaSpider(scrapy.Spider):
     start_urls = ["https://auto.youla.ru/"]
 
     data_query = {
-        "title": lambda resp: resp.css("div.AdvertCard_advertTitle__1S1Ak::text").get(),
-        "price": lambda resp: float(
-            resp.css("div.AdvertCard_price__3dDCr::text").get().replace("\u2009", "")
+        "title": lambda response: response.css("div.AdvertCard_advertTitle__1S1Ak::text").get(),
+        "price": lambda response: float(
+            response.css("div.AdvertCard_price__3dDCr::text").get().replace("\u2009", "")
         ),
-        "photos": lambda resp: [
-            itm.attrib.get("src") for itm in resp.css("figure.PhotoGallery_photo__36e_r img")
+        "photos": lambda response: [
+            itm.attrib.get("src") for itm in response.css("figure.PhotoGallery_photo__36e_r img")
         ],
-        "characteristics": lambda resp: [
+        "characteristics": lambda response: [
             {
                 "name": itm.css(".AdvertSpecs_label__2JHnS::text").extract_first(),
                 "value": itm.css(".AdvertSpecs_data__xK2Qx::text").extract_first()
                 or itm.css(".AdvertSpecs_data__xK2Qx a::text").extract_first(),
             }
-            for itm in resp.css("div.AdvertCard_specs__2FEHc .AdvertSpecs_row__ljPcX")
+            for itm in response.css("div.AdvertCard_specs__2FEHc .AdvertSpecs_row__ljPcX")
         ],
-        "descriptions": lambda resp: resp.css(
+        "descriptions": lambda resp: response.css(
             ".AdvertCard_descriptionInner__KnuRi::text"
         ).extract_first(),
-        "author": lambda resp: AutoyoulaSpider.get_author_id(resp),
+        "author": lambda response: AutoyoulaSpider.get_author_id(response),
+        "phone": lambda response: AutoyoulaSpider.get_author_phone(response),
     }
 
     def __init__(self, *args, **kwargs):
@@ -67,9 +68,9 @@ class AutoyoulaSpider(scrapy.Spider):
         self.db_client["gb_parse_spiders"][self.name].insert_one(data)
 
     @staticmethod
-    def get_author_id(resp):
+    def get_author_id(response):
         marker = "window.transitState = decodeURIComponent"
-        for script in resp.css("script"):
+        for script in response.css("script"):
             try:
                 if marker in script.css("::text").extract_first():
                     re_pattern = re.compile(r"youlaId%22%2C%22([a-zA-Z|\d]+)%22%2C%22avatar")
@@ -79,5 +80,18 @@ class AutoyoulaSpider(scrapy.Spider):
                         if result
                         else None
                     )
+            except TypeError:
+                pass
+
+    @staticmethod
+    def get_author_phone(response):
+        marker = "window.transitState = decodeURIComponent"
+        for script in response.css("script"):
+            try:
+                if marker in script.css("::text").extract_first():
+                    re_pattern = re.compile(r"phone%22%2C%22([a-zA-Z|\d]+)Xw%3D%3D%22%2C%22time")
+                    result = re.findall(re_pattern, script.css("::text").extract_first())
+                    result = b64decode(b64decode(result[0])).decode('UTF-8')
+                    return result
             except TypeError:
                 pass
