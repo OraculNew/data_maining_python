@@ -1,4 +1,5 @@
 import re
+import base64
 
 import pymongo
 import scrapy
@@ -25,7 +26,7 @@ class AutoyoulaSpider(scrapy.Spider):
             }
             for itm in response.css("div.AdvertCard_specs__2FEHc .AdvertSpecs_row__ljPcX")
         ],
-        "descriptions": lambda resp: response.css(
+        "descriptions": lambda response: response.css(
             ".AdvertCard_descriptionInner__KnuRi::text"
         ).extract_first(),
         "author": lambda response: AutoyoulaSpider.get_author_id(response),
@@ -76,7 +77,7 @@ class AutoyoulaSpider(scrapy.Spider):
                     re_pattern = re.compile(r"youlaId%22%2C%22([a-zA-Z|\d]+)%22%2C%22avatar")
                     result = re.findall(re_pattern, script.css("::text").extract_first())
                     return (
-                        resp.urljoin(f"/user/{result[0]}").replace("auto.", "", 1)
+                        response.urljoin(f"/user/{result[0]}").replace("auto.", "", 1)
                         if result
                         else None
                     )
@@ -91,7 +92,7 @@ class AutoyoulaSpider(scrapy.Spider):
                 if marker in script.css("::text").extract_first():
                     re_pattern = re.compile(r"phone%22%2C%22([a-zA-Z|\d]+)Xw%3D%3D%22%2C%22time")
                     result = re.findall(re_pattern, script.css("::text").extract_first())
-                    result = b64decode(b64decode(result[0])).decode('UTF-8')
+                    result = base64.b64decode(base64.b64decode(result[0]).decode('UTF-8'))
                     return result
             except TypeError:
                 pass
