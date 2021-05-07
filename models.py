@@ -31,7 +31,7 @@ class Post(Base, UrlMixin):
     author_id = Column(Integer, ForeignKey("author.id"), nullable=True)
     author = relationship("Author", backref="posts")
     tags = relationship("Tag", secondary=tag_post)
-    comments = relationship("Comment", backref="post")
+    #comments = relationship("Comment", backref="post")
 
 
 class Author(Base, UrlMixin):

@@ -47,10 +47,6 @@ class Database:
         post.tags.extend(tags)
         post.comments.extend(self.add_comments(session, data["comments_data"]))
 
-        for comment in post.comments:
-            if comment.parent_id:
-                comment.parent = session.query(models.Comment).filter_by(id=comment.parent_id).first()
-
         try:
             session.add(post)
             session.commit()
