@@ -10,10 +10,7 @@
     </select>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8e675e53-6c0a-405b-b48c-fd767d2e4afc" name="Default Changelist" comment="debugs">
-      <change afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-    </list>
+    <list default="true" id="8e675e53-6c0a-405b-b48c-fd767d2e4afc" name="Default Changelist" comment="task" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -49,7 +46,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="last_opened_file_path" value="$USER_HOME$/AppData/Local/Programs/Python/Python38/python.exe" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="settings.editor.selected.configurable" value="org.jetbrains.plugins.github.ui.GithubSettingsConfigurable" />
   </component>
   <component name="RunManager" selected="Python.autoyoula">
     <configuration name="__init__ (1)" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
@@ -347,7 +344,14 @@
       <option name="project" value="LOCAL" />
       <updated>1620387884453</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="task">
+      <created>1620398657999</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1620398657999</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -365,7 +369,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="finish" />
     <MESSAGE value="debugs" />
-    <option name="LAST_COMMIT_MESSAGE" value="debugs" />
+    <MESSAGE value="task" />
+    <option name="LAST_COMMIT_MESSAGE" value="task" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -424,6 +429,11 @@
           <url>file://$PROJECT_DIR$/gb_parse/spiders/autoyoula.py</url>
           <line>7</line>
           <option name="timeStamp" value="19" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/gb_parse/spiders/autoyoula.py</url>
+          <line>39</line>
+          <option name="timeStamp" value="22" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
