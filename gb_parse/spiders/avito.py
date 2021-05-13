@@ -1,43 +1,33 @@
 import scrapy
-from ..loaders import VacancyLoader, CompanyLoader
-from ..items import VacancyItem, CompanyItem
-from .xpaths import SELECTORS, DATA_VACANCY_SELECTORS, DATA_COMPANY_SELECTORS
+
+from gb_parse.loaders import AvitoLoader
+from gb_parse.spiders.xpaths import AVITO_PAGE_XPATH, AVITO_OFFER_XPATH
+
 
 class AvitoSpider(scrapy.Spider):
     name = 'avito'
     allowed_domains = ['avito.ru']
-    start_urls = ['https://www.avito.ru/domodedovo/kvartiry/prodam']
+    start_urls = ['https://www.avito.ru/domodedovo/kvartiry/prodam/']
+    headers = {
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Accept-Language": "en-GB,en;q=0.5",
+        "Connection": "keep-alive",
+    }
 
-    def _get_follow(self, response, selector_str, callback):
-        for itm in response.xpath(selector_str):
-            yield response.follow(itm, callback=callback)
+    def _get_follow_xpath(self, response, xpath, callback):
+        for url in response.xpath(xpath):
+            yield response.follow(url, callback=callback, headers=self.headers)
 
-    def parse(self, response, *args, **kwargs):
-        yield from self._get_follow(
-            response, SELECTORS["vacancy_pagination"], self.parse
-        )
-        yield from self._get_follow(
-            response, SELECTORS["vacancy_url"], self.vacancy_parse
-        )
+    def parse(self, response):
+        callbacks = {"pagination": self.parse, "offer": self.offer_parse}
 
-    def vacancy_parse(self, response):
-        item = VacancyItem()
-        vacancy_loader = VacancyLoader(response=response, item=item)
-        vacancy_loader.add_value("url", response.url)
-        for key, xpath in DATA_VACANCY_SELECTORS.items():
-            vacancy_loader.add_xpath(key, xpath)
-        yield from self._get_follow(
-            response, SELECTORS["company_url"], self.company_parse
-        )
-        yield vacancy_loader.load_item()
+        for key, xpath in AVITO_PAGE_XPATH.items():
+            yield from self._get_follow_xpath(response, xpath, callbacks[key])
 
-    def company_parse(self, response):
-        item = CompanyItem()
-        company_loader = CompanyLoader(response=response, item=item)
-        company_loader.add_value("url", response.url)
-        for key, xpath in DATA_COMPANY_SELECTORS.items():
-            company_loader.add_xpath(key, xpath)
-        yield from self._get_follow(
-            response, SELECTORS["company_vacancies"], self.parse
-        )
-        yield company_loader.load_item()
+    def offer_parse(self, response):
+        loader = AvitoLoader(response=response)
+        loader.add_value("url", response.url)
+        for key, xpath in AVITO_OFFER_XPATH.items():
+            loader.add_xpath(key, xpath)
+        yield loader.load_item()
